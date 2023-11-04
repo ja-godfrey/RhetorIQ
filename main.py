@@ -14,9 +14,9 @@ menu_selection = st.sidebar.radio("Select Chatbot:", ("RhetorIQ", "Workshop Part
 
 if menu_selection == "RhetorIQ":
     st.title("📝 RhetorIQ 📝")
-    st.caption("A series of chatbots designed to help your writing style flourish ✍️🤖🌸\n\n Select which chatbot you'd like to talk to on the left.")
+    st.caption("Upload a few paragraphs of your writing, and RhetorIQ will suggest rhetorical devices for you to incorporate.")
     if "rhetoriq_messages" not in st.session_state:
-        st.session_state["rhetoriq_messages"] = [{"role": "assistant", "content": "Hi! 👋 I'm going to help you add more rhetorical devices to your writing. Paste in a paragraph or two, and let's get started!"}]
+        st.session_state["rhetoriq_messages"] = [{"role": "assistant", "content": "Hi! 👋 Paste in a paragraph or two, and let's get started!"}]
 
     for msg in st.session_state.rhetoriq_messages:
         st.chat_message(msg["role"]).write(msg["content"])
@@ -42,8 +42,9 @@ if menu_selection == "RhetorIQ":
 
 elif menu_selection == "Workshop Partner":
     st.title("🤝 Workshop Partner 🤝")
+    st.caption("Upload a few paragraphs of your writing, and Workshop Partner will suggest rhetorical devices for you to incorporate.")
     if "workshop_messages" not in st.session_state:
-        st.session_state["workshop_messages"] = [{"role": "assistant", "content": "Hello! 👋😄 I'm a writing workshop partner. Paste in a few lines of text, and I'll offer some positive and constructive feedback."}]
+        st.session_state["workshop_messages"] = [{"role": "assistant", "content": "Hello! 👋😄 Paste in a few lines of text, and I'll offer some positive and constructive feedback. I'm excited to workshop with you!"}]
 
     for msg in st.session_state.workshop_messages:
         st.chat_message(msg["role"]).write(msg["content"])
