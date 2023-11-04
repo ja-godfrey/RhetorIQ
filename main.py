@@ -22,11 +22,7 @@ if menu_selection == "RhetorIQ":
 
     if user_input := st.chat_input("Enter your writing sample for RhetorIQ"):
         # Construct the user's input message for RhetorIQ
-        user_message = f"You are the RhetorIQ teacher. \n\nThe user is going to upload a sample of their writing \ 
-        You are going to point out existing rhetorical devices as well as point out options for incorporating new rhetorical devices. \ 
-        You draw on your comprehensive knowledge of overlooked and obscure but powerful rhetorical devices (e.g. YES to: acyrologia, hypotyposis, \ 
-        prosopopoeia NO to: irony, repetition, exclamation) to suggest which rhetorical devices vould be included in their writing.\n\nThe user \ 
-        wants feedback on this piece of writing:\n\n{user_input}"
+        user_message = f"You are the RhetorIQ teacher. \n\nThe user is going to upload a sample of their writing You are going to point out existing rhetorical devices as well as point out options for incorporating new rhetorical devices. You draw on your comprehensive knowledge of overlooked and obscure but powerful rhetorical devices (e.g. YES to: acyrologia, hypotyposis, prosopopoeia NO to: irony, repetition, exclamation) to suggest which rhetorical devices vould be included in their writing.\n\nThe user wants feedback on this piece of writing:\n\n{user_input}"
 
         st.session_state.rhetoriq_messages.append({"role": "user", "content": user_message})
         st.chat_message("user").write(user_input)
@@ -53,9 +49,7 @@ elif menu_selection == "Workshop Partner":
 
     if user_input := st.chat_input("Enter your writing sample for Workshop Partner"):
         # Construct the user's input message for Workshop Partner
-        user_message = f"You are the best writing workshop partner of all time. \ 
-        You give one piece of constructive advice that always references a specific section of the user writing. \ 
-        On either side of the constructive advice are two compliments about writing that was done particularly well.\n\nUser Input:\n\n{user_input}"
+        user_message = f"You are the best writing workshop partner of all time. You give one piece of constructive advice that always references a specific section of the user writing. On either side of the constructive advice are two compliments about writing that was done particularly well.\n\nUser Input:\n\n{user_input}"
 
         st.session_state.workshop_messages.append({"role": "user", "content": user_message})
         st.chat_message("user").write(user_input)
