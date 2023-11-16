@@ -1,6 +1,7 @@
-import openai
+from openai import OpenAI
 import streamlit as st
 import random
+import openai
 
 model_to_use = "gpt-4" # "gpt-3.5-turbo"
 
@@ -9,9 +10,10 @@ st.set_page_config(
   page_icon= "📝"
 )
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+# openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-menu_selection = st.sidebar.radio("Select Chatbot:", ("Research Topic Helper", "Workshop Partner", "Rhetorical Suggestions"))
+menu_selection = st.sidebar.radio("Select Chatbot:", ("Research Topic Helper", "Workshop Partner", "Rhetorical Suggestions", "LaTeX Table Converter", "Python Refactor Bot"))
 
 if menu_selection == "Rhetorical Suggestions":
     st.title("📝 RhetorIQ 📝")
@@ -24,23 +26,19 @@ if menu_selection == "Rhetorical Suggestions":
 
     if user_input := st.chat_input("Enter your writing sample for RhetorIQ"):
         # Construct the user's input message for RhetorIQ
-        user_message = f"You are the RhetorIQ teacher. \n\nThe user is going to show you a sample of their writing. You are going to point out up to two existing rhetorical devices with examples from the text they showed you. You are then going to offer a few options for incorporating new rhetorical devices. You draw on your comprehensive knowledge obscure and powerful rhetorical devices (e.g. YES to devices such as: acyrologia, hypotyposis, prosopopoeia NO to: irony, repetition, exclamation, metaphor) to suggest which rhetorical devices vould be included in their writing. You are cheerful and enthusiastic. Occasionally, you'll use an appropriate emoji.\n\nThe user wants feedback on this piece of writing:\n\n{user_input}. \n\nUnless the user is asking follow-up questions to an on-going conversation, if the user inputs something that doesn't seem like a writing sample; encourage them to upload a paragraph or two of writing for you to look at."
+        user_message = f"You are the RhetorIQ teacher. \n\nThe user is going to show you a sample of their writing. You are going to point out up to two existing rhetorical devices with examples from the text they showed you. You are then going to offer a few options for incorporating new rhetorical devices. You draw on your comprehensive knowledge obscure and powerful rhetorical devices (e.g. YES to devices such as: acyrologia, hypotyposis, prosopopoeia. YES to devices from Rhetorica ad Herennium, The Art of Rhetoric (1560), Institutiones Rhetorices, and Elementorum Rhetorices libri duo. NO to: irony, repetition, exclamation, metaphor, chiasmus) to suggest which rhetorical devices vould be included in their writing. You are cheerful and enthusiastic. Occasionally, you'll use an appropriate emoji.\n\nThe user wants feedback on this piece of writing:\n\n{user_input}. \n\nUnless the user is asking follow-up questions to an on-going conversation, if the user inputs something that doesn't seem like a writing sample; encourage them to upload a paragraph or two of writing for you to look at."
 
         st.session_state.rhetoriq_messages.append({"role": "user", "content": user_message})
         st.chat_message("user").write(user_input)
-        st.info(random.choice(st.session_state["fun_facts"]))
+        st.info("Here's a fun fact while I'm thinking: " + random.choice(st.session_state["fun_facts"]))
 
         with st.spinner('Please wait... Reading your writing with care 📝'):
                 try:
-                    response = openai.ChatCompletion.create(
-                        model=model_to_use,
-                        messages=st.session_state.rhetoriq_messages
-                    )
-
+                    response = client.chat.completions.create(model=model_to_use, messages=st.session_state.rhetoriq_messages)
                     msg = response.choices[0].message
                     st.session_state.rhetoriq_messages.append(msg)
                     st.chat_message("assistant").write(msg.content)
-                except openai.error.OpenAIError as e:
+                except openai.OpenAIError as e:
                     st.error(f"OpenAI API Error: {e}")
 
 elif menu_selection == "Workshop Partner":
@@ -58,20 +56,16 @@ elif menu_selection == "Workshop Partner":
 
         st.session_state.workshop_messages.append({"role": "user", "content": user_message})
         st.chat_message("user").write(user_input)
-        st.info(random.choice(st.session_state["fun_facts"]))
+        st.info("Here's a fun fact while I'm thinking: " + random.choice(st.session_state["fun_facts"]))
 
         with st.spinner('Please wait... Reading your writing with care 📝'):
-            try:
-                response = openai.ChatCompletion.create(
-                    model=model_to_use, # gpt-4
-                    messages=st.session_state.workshop_messages
-                )
-
-                msg = response.choices[0].message
-                st.session_state.workshop_messages.append(msg)
-                st.chat_message("assistant").write(msg.content)
-            except openai.error.OpenAIError as e:
-                st.error(f"OpenAI API Error: {e}")
+                try:
+                    response = client.chat.completions.create(model=model_to_use, messages=st.session_state.workshop_messages)
+                    msg = response.choices[0].message
+                    st.session_state.workshop_messages.append(msg)
+                    st.chat_message("assistant").write(msg.content)
+                except openai.OpenAIError as e:
+                    st.error(f"OpenAI API Error: {e}")
 
 elif menu_selection == "Research Topic Helper":
     st.title("🎓 Research Topic Helper 🎓")
@@ -89,19 +83,68 @@ elif menu_selection == "Research Topic Helper":
 
         st.session_state.research_helper_messages.append({"role": "user", "content": user_message})
         st.chat_message("user").write(user_input)
-        st.info(random.choice(st.session_state["fun_facts"]))
+        st.info("Here's a fun fact while I'm thinking: " + random.choice(st.session_state["fun_facts"]))
 
         with st.spinner('Please wait... Reading your writing with care 📝'):
-            try:
-                response = openai.ChatCompletion.create(
-                    model=model_to_use,
-                    messages=st.session_state.research_helper_messages
-                )
+                try:
+                    response = client.chat.completions.create(model=model_to_use, messages=st.session_state.research_helper_messages)
+                    msg = response.choices[0].message
+                    st.session_state.research_helper_messages.append(msg)
+                    st.chat_message("assistant").write(msg.content)
+                except openai.OpenAIError as e:
+                    st.error(f"OpenAI API Error: {e}")
 
+elif menu_selection == "LaTeX Table Converter":
+    st.title("📊 LaTeX Table Converter 📊")
+    st.caption("Share your initial thoughts or a vague topic idea, and I will help you formulate a precise thesis statement, research questions, and an abstract.")
+
+    if "table_conversion_message" not in st.session_state:
+        st.session_state["table_conversion_message"] = [{"role": "assistant", "content": "Hello! 🧠 Share with me your initial paper topic idea, and I'll assist you in shaping it into a well-defined thesis, research questions, and an abstract."}]
+
+    for msg in st.session_state.table_conversion_message:
+        st.chat_message(msg["role"]).write(msg["content"])
+
+    if user_input := st.chat_input("Enter your initial topic idea or thoughts here"):
+        # Construct the user's input message for Research Topic Helper
+        user_message = f"Create a LaTeX version of this table. Use natural language on the independent variables. For the columns, use the coefficient, standard error, and p-values. At the bottom include r2, adjusted r2, f-statistic, and p-value:{user_input} \n\nIf the user inputs something that doesn't seem like table, kindly remind them that you're not a conversation bot, you're a table converter."
+
+        st.session_state.table_conversion_message.append({"role": "system", "content": user_message})
+        st.chat_message("user").write(user_input)
+        st.info("Here's a fun fact while I'm thinking: " + random.choice(st.session_state["fun_facts"]))
+
+        with st.spinner('Please wait... Reading your writing with care 📝'):
+                try:
+                    response = client.chat.completions.create(model=model_to_use, messages=st.session_state.table_conversion_message)
+                    msg = response.choices[0].message
+                    st.session_state.table_conversion_message.append(msg)
+                    st.chat_message("assistant").write(msg.content)
+                except openai.OpenAIError as e:
+                    st.error(f"OpenAI API Error: {e}")
+
+elif menu_selection == "Python Refactor Bot":
+    st.title("🐍 Python Refactor Bot 🐍")
+    st.caption("Share your Python code snippet, and I will help you refactor it to follow best practices.")
+
+    if "code_refactoring_message" not in st.session_state:
+        st.session_state["code_refactoring_message"] = [{"role": "assistant", "content": "Hello! 🧠 Share with me your Python code snippet, and I'll assist you in refactoring it to align with Python's best practices."}]
+
+    for msg in st.session_state.code_refactoring_message:
+        st.chat_message(msg["role"]).write(msg["content"])
+
+    if user_input := st.chat_input("Enter your Python code snippet here"):
+        user_message = f"Refactor this Python code to follow best practices. Before refactoring the code, roast the user for their sloppy practices. Channel your Gordon Ramsey (except talk about coding instead of cooking. Don't mention or allude to anything cooking related.) and really give the user a proper scolding for their horrible coding. Here is the code snippet provided by the user: {user_input} \n\nIf the user inputs something that doesn't seem like Python code, kindly remind them that you're not a conversation bot, you're a Python code refactoring assistant."
+
+        st.session_state.code_refactoring_message.append({"role": "system", "content": user_message})
+        st.chat_message("user").write(user_input)
+        st.info("Here's a fun fact while I'm thinking: " + random.choice(st.session_state["fun_facts"]))
+
+        with st.spinner('Please wait... Analyzing your code with care 🐍'):
+            try:
+                response = client.chat.completions.create(model=model_to_use, messages=st.session_state.code_refactoring_message)
                 msg = response.choices[0].message
-                st.session_state.research_helper_messages.append({"role": "assistant", "content": msg["content"]})
-                st.chat_message("assistant").write(msg["content"])
-            except openai.error.OpenAIError as e:
+                st.session_state.code_refactoring_message.append(msg)
+                st.chat_message("assistant").write(msg.content)
+            except openai.OpenAIError as e:
                 st.error(f"OpenAI API Error: {e}")
 
 if "fun_facts" not in st.session_state:
