@@ -94,33 +94,6 @@ elif menu_selection == "Research Topic Helper":
                 except openai.OpenAIError as e:
                     st.error(f"OpenAI API Error: {e}")
 
-elif menu_selection == "LaTeX Table Converter":
-    st.title("📊 LaTeX Table Converter 📊")
-    st.caption("Share your initial thoughts or a vague topic idea, and I will help you formulate a precise thesis statement, research questions, and an abstract.")
-
-    if "table_conversion_message" not in st.session_state:
-        st.session_state["table_conversion_message"] = [{"role": "assistant", "content": "Hello! 🧠 Share with me your initial paper topic idea, and I'll assist you in shaping it into a well-defined thesis, research questions, and an abstract."}]
-
-    for msg in st.session_state.table_conversion_message:
-        st.chat_message(msg["role"]).write(msg["content"])
-
-    if user_input := st.chat_input("Enter your initial topic idea or thoughts here"):
-        # Construct the user's input message for Research Topic Helper
-        user_message = f"Create a LaTeX version of this table. Use natural language on the independent variables. For the columns, use the coefficient, standard error, and p-values. At the bottom include r2, adjusted r2, f-statistic, and p-value:{user_input} \n\nIf the user inputs something that doesn't seem like table, kindly remind them that you're not a conversation bot, you're a table converter."
-
-        st.session_state.table_conversion_message.append({"role": "system", "content": user_message})
-        st.chat_message("user").write(user_input)
-        st.info("Here's a fun fact while I'm thinking: " + random.choice(st.session_state["fun_facts"]))
-
-        with st.spinner('Please wait... Reading your writing with care 📝'):
-                try:
-                    response = client.chat.completions.create(model=model_to_use, messages=st.session_state.table_conversion_message)
-                    msg = response.choices[0].message
-                    st.session_state.table_conversion_message.append(msg)
-                    st.chat_message("assistant").write(msg.content)
-                except openai.OpenAIError as e:
-                    st.error(f"OpenAI API Error: {e}")
-
 elif menu_selection == "Python Refactor Bot":
     st.title("🐍 Python Refactor Bot 🐍")
     st.caption("Share your Python code snippet, and I will help you refactor it to follow best practices.")
