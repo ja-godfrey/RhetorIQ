@@ -13,7 +13,12 @@ st.set_page_config(
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 # openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-menu_selection = st.sidebar.radio("Select Chatbot:", ("Research Topic Helper", "Workshop Partner", "Rhetorical Suggestions", "LaTeX Table Converter", "Python Refactor Bot"))
+menu_selection = st.sidebar.radio("Select Chatbot:", ("Research Topic Helper", "Workshop Partner", "Rhetorical Suggestions", "Python Refactor Bot"))
+# Add the Email Me button at the end of the sidebar
+for _ in range(10):  # Adjust the range number as needed
+    st.sidebar.write("")
+st.sidebar.markdown('#### Feedback? Want to use this in your class?\n[Email Me](mailto:jgod@umich.edu)')
+# st.sidebar.markdown('[Email Me](mailto:unicorn_lover@msn.com)')
 
 if menu_selection == "Rhetorical Suggestions":
     st.title("📝 RhetorIQ 📝")
@@ -146,7 +151,7 @@ if "fun_facts" not in st.session_state:
         "A 'lexicon' is the vocabulary of a person, language, or branch of knowledge.",
         "The word 'nerd' was first coined by Dr. Seuss in 'If I Ran the Zoo' in 1950.",
         "Stephen King writes 2,000 words a day, even on holidays.",
-        "The pen name 'Voltaire' is an anagram of 'Arouet l.j.', a shortened form of the author's real name, François-Marie Arouet."
+        "The pen name 'Voltaire' is an anagram of 'Arouet l.j.', a shortened form of the author's real name, François-Marie Arouet.",
         "Did you know the longest sentence ever published in literature contains 823 words?",
         "The 'IMRaD' structure stands for Introduction, Methods, Results, and Discussion and is the standard for many academic papers.",
         "The oldest known alphabet was developed in central Egypt around 2000 B.C.",
