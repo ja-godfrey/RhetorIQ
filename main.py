@@ -3,7 +3,7 @@ import streamlit as st
 import random
 import openai
 
-model_to_use = "gpt-4" # "gpt-3.5-turbo"
+model_to_use = "gpt-3.5-turbo" # "gpt-4"
 
 st.set_page_config(
   page_title= "RhetorIQ", 
